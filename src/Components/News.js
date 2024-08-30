@@ -31,7 +31,7 @@ export class News extends Component {
   }
 
   async componentDidMount() {
-    let url = `https://newsapi.org/v2/top-headlines?country=${this.props.country}&category=${this.props.category}&apiKey=f9eddfefa3274457ab4c811400c341bf&page=1&pageSize=${this.props.PageSize}`;
+    let url = `https://newsapi.org/v2/top-headlines?country=${this.props.country}&category=${this.props.category}&apiKey=f9eddfefa3274457ab4c811400c341bf&page=1&pageSize=${this.props.pageSize}`;
     let data = await fetch(url);
     let parsedData = await data.json();
     this.setState({
@@ -44,7 +44,7 @@ export class News extends Component {
     console.log("handleNextClick");
     if (
       this.state.page + 1 >
-      Math.ceil(this.state.totalResults / this.props.PageSize)
+      Math.ceil(this.state.totalResults / this.props.pageSize)
     ) {
     } else {
       let url = `https://newsapi.org/v2/top-headlines?country=${
@@ -53,7 +53,7 @@ export class News extends Component {
         this.props.category
       }&apiKey=f9eddfefa3274457ab4c811400c341bf&page=${
         this.state.page + 1
-      }&pageSize=${this.props.PageSize}`;
+      }&pageSize=${this.props.pageSize}`;
       let data = await fetch(url);
       let parsedData = await data.json();
       this.setState({
@@ -72,7 +72,7 @@ export class News extends Component {
       this.props.category
     }&apiKey=f9eddfefa3274457ab4c811400c341bf&page=${
       this.state.page - 1
-    } &pageSize=${this.props.PageSize}`;
+    }&pageSize=${this.props.pageSize}`;
     let data = await fetch(url);
     let parsedData = await data.json();
     this.setState({
@@ -90,21 +90,25 @@ export class News extends Component {
         </h1>
 
         <div className="row">
-          {this.state.articles.map((element) => {
-            return (
-              <div className="col-md-4" key={element.url}>
-                <Newsitem
-                  title={element.title}
-                  description={element.description}
-                  ImageUrl={element.urlToImage}
-                  newsUrl={element.url}
-                  author={element.author}
-                  date={element.publishedAt}
-                  source={element.source.name}
-                />
-              </div>
-            );
-          })}
+          {this.state.articles && this.state.articles.length > 0 ? (
+            this.state.articles.map((element) => {
+              return (
+                <div className="col-md-4" key={element.url}>
+                  <Newsitem
+                    title={element.title}
+                    description={element.description}
+                    ImageUrl={element.urlToImage}
+                    newsUrl={element.url}
+                    author={element.author}
+                    date={element.publishedAt}
+                    source={element.source.name}
+                  />
+                </div>
+              );
+            })
+          ) : (
+            <p>No articles available</p>
+          )}
         </div>
         <div className="container d-flex justify-content-between my-4">
           <button
@@ -112,17 +116,17 @@ export class News extends Component {
             onClick={this.handlePrevClick}
             className="btn btn-dark btn-lg"
           >
-            &larr;Previous
+            &larr; Previous
           </button>
           <button
             disabled={
               this.state.page + 1 >
-              Math.ceil(this.state.totalResults / this.props.PageSize)
+              Math.ceil(this.state.totalResults / this.props.pageSize)
             }
             onClick={this.handleNextClick}
             className="btn btn-dark btn-lg"
           >
-            next &rarr;
+            Next &rarr;
           </button>
         </div>
       </div>
